@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="focus_progress_size">500dp</dimen>
+    <dimen name="focus_text_layout_size">250dp</dimen>
+    <dimen name="focus_button_size">100dp</dimen>
+    <dimen name="focus_text_size">30sp</dimen>
+</resources>
