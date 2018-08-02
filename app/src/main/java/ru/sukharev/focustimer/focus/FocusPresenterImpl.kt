@@ -1,16 +1,28 @@
 package ru.sukharev.focustimer.focus
 
-class FocusPresenterImpl(view :FocusContract.View): FocusContract.Presenter {
+import ru.sukharev.focustimer.model.FocusModel
+import ru.sukharev.focustimer.utils.getReadableTime
 
-    init {
-        view.presenter = this
+class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
+    FocusModel.Listener{
+
+    override fun stop() {
+        model.detachListener(this)
     }
-    override fun start() {
 
+    override fun start() {
+        model.attachListener(this)
+    }
+
+    override fun onNewValue(value: Int) {
+        view.changeTimerAndProgressBar(getReadableTime(value, model.getMaxValue()),
+                value,
+                model.getMaxValue())
     }
 
     override fun focusButtonPressed() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        model.switchCounter()
     }
+
 
 }

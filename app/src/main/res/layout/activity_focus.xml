@@ -13,8 +13,6 @@
         android:layout_height="@dimen/focus_progress_size"
         android:layout_centerInParent="true"
         android:indeterminate="false"
-        android:max="100"
-        android:progress="30"
         android:progressDrawable="@drawable/circle_progress"
         android:secondaryProgress="100" />
 
@@ -23,12 +21,12 @@
         android:layout_width="@dimen/focus_text_layout_size"
         android:layout_height="@dimen/focus_text_layout_size"
         android:gravity="center"
-        android:text="25:00"
         android:layout_centerInParent="true"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/focus_text_size" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/focus_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/focus_text"
