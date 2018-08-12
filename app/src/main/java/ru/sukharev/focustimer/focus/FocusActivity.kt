@@ -17,26 +17,33 @@ import ru.sukharev.focustimer.utils.bind
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
 
-
-
     override lateinit var presenter: FocusContract.Presenter
 
     private val focusTextView by bind<TextView>(R.id.focus_text)
     private val focusProgressBar by bind<ProgressBar>(R.id.focus_progress_bar)
     private val focusButton by bind<FloatingActionButton>(R.id.focus_button)
+    private val levelProgressBar by bind<ProgressBar>(R.id.focus_level_progress_bar)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_focus)
-        presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance())
+        presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance(this))
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
     }
 
-    override fun changeTimerAndProgressBar(newValue: String, progress: Int, maxProgress: Int) {
+    override fun setMaxValues(maxProgress: Int, maxLevel: Int){
+        focusProgressBar.max = maxProgress
+        levelProgressBar.max = maxLevel
+    }
+
+    override fun changeTimerAndProgressBar(newValue: String, progress: Int) {
         focusTextView.text = newValue;
         focusProgressBar.progress = progress
-        focusProgressBar.max = maxProgress
+    }
+
+    override fun setLevel(value: Int) {
+        levelProgressBar.progress = value
     }
 
     override fun getViewContext(): Context {

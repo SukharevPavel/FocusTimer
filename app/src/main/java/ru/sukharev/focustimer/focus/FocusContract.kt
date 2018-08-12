@@ -10,9 +10,13 @@ interface FocusContract {
 
         fun getViewContext() : Context
 
-        fun changeTimerAndProgressBar(newValue: String, progress: Int, maxProgress: Int)
+        fun changeTimerAndProgressBar(newValue: String, progress: Int)
 
         fun notifyUserAboutFinish()
+
+        fun setMaxValues(maxProgress: Int, maxLevel: Int)
+
+        fun setLevel(value: Int)
     }
 
     interface Presenter : BasePresenter{

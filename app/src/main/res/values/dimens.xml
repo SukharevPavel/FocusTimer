@@ -4,4 +4,6 @@
     <dimen name="focus_text_layout_size">250dp</dimen>
     <dimen name="focus_button_size">100dp</dimen>
     <dimen name="focus_text_size">30sp</dimen>
+    <dimen name="focus_level_width">200dp</dimen>
+    <dimen name="focus_level_height">30dp</dimen>
 </resources>

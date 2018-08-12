@@ -5,6 +5,7 @@ import ru.sukharev.focustimer.utils.getReadableTime
 
 class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
+
     override fun onFocusFinish() {
         view.notifyUserAboutFinish()
     }
@@ -15,12 +16,16 @@ class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): F
 
     override fun start() {
         model.attachListener(this)
+        view.setMaxValues(model.getMaxValue(), model.getMaxLevel())
     }
 
     override fun onNewValue(value: Int) {
         view.changeTimerAndProgressBar(getReadableTime(value, model.getMaxValue()),
-                value,
-                model.getMaxValue())
+                value)
+    }
+
+    override fun onNewLevel(value: Int){
+        view.setLevel(value)
     }
 
     override fun focusButtonPressed() {

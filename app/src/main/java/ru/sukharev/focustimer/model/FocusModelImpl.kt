@@ -1,8 +1,20 @@
 package ru.sukharev.focustimer.model
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Handler
 
-class FocusModelImpl : FocusModel {
+class FocusModelImpl(applicationContext: Context) : FocusModel {
+    override fun getMaxLevel(): Int {
+        return MAX_LEVEL;
+    }
+
+    val sharedPreferences: SharedPreferences
+
+    init {
+        sharedPreferences = applicationContext.getSharedPreferences(FOCUS_PREFS, Context.MODE_PRIVATE)
+    }
 
     val listeners = ArrayList<FocusModel.Listener>()
     var state = CounterState.STOPPED
@@ -31,7 +43,15 @@ class FocusModelImpl : FocusModel {
         }
     }
 
+    private fun onLevelValueChanged(){
+        val exp = sharedPreferences.getInt(FOCUS_EXP,0)
+        for (listener in listeners){
+            listener.onNewLevel(exp)
+        }
+    }
+
     private fun onFocusFinish(){
+        addCurrentExp(counterValue)
         for (listener in listeners){
             listener.onFocusFinish()
         }
@@ -41,6 +61,33 @@ class FocusModelImpl : FocusModel {
         when (state) {
             CounterState.STARTED -> dropCounter()
             CounterState.STOPPED -> startCounter()
+        }
+    }
+
+    @SuppressLint("ApplySharedPref")
+    override fun addCurrentExp(value : Int){
+        val newValue = value + sharedPreferences.getInt(FOCUS_EXP,0)
+        with(sharedPreferences.edit()){
+            putInt(FOCUS_EXP, newValue)
+            commit()
+        }
+        updateExpPrefs()
+    }
+
+    @SuppressLint("ApplySharedPref")
+    private fun updateExpPrefs(){
+        val curPoints = sharedPreferences.getInt(FOCUS_EXP,0)
+        val oldDate = sharedPreferences.getLong(FOCUS_ACCESS_DATE, System.currentTimeMillis())
+        val newDate = System.currentTimeMillis()
+        val range = newDate  - oldDate
+        if (!range.equals((0))) {
+            val newPoints = (curPoints - range / 10).toInt()
+            with(sharedPreferences.edit()){
+                putInt(FOCUS_EXP, Math.min(newPoints, MAX_LEVEL))
+                putLong(FOCUS_ACCESS_DATE, newDate)
+                commit()
+            }
+            onLevelValueChanged()
         }
     }
 
@@ -70,12 +117,16 @@ class FocusModelImpl : FocusModel {
     }
 
     companion object {
-        private const val MAX_VALUE = 60 * 25
+        private const val MAX_VALUE = 60*25
+        private const val FOCUS_PREFS = "focus_preferences"
+        private const val FOCUS_ACCESS_DATE = "focus_access_date"
+        private const val FOCUS_EXP = "focus_exp"
+        private const val MAX_LEVEL = 60*60
 
         private var instance : FocusModelImpl? = null
 
-        fun getInstance() : FocusModelImpl{
-            return instance?:FocusModelImpl().apply { instance = this }
+        fun getInstance(context: Context) : FocusModelImpl{
+            return instance?:FocusModelImpl(context.applicationContext).apply { instance = this }
         }
 
 
