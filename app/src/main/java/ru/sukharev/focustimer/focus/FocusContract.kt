@@ -11,6 +11,8 @@ interface FocusContract {
         fun getViewContext() : Context
 
         fun changeTimerAndProgressBar(newValue: String, progress: Int, maxProgress: Int)
+
+        fun notifyUserAboutFinish()
     }
 
     interface Presenter : BasePresenter{

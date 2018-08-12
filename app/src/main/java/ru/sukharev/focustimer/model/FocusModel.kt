@@ -15,6 +15,8 @@ interface FocusModel {
 
         fun onNewValue(value : Int)
 
+        fun onFocusFinish()
+
     }
 
 }

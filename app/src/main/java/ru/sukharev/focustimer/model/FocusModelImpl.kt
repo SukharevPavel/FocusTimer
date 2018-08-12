@@ -20,11 +20,20 @@ class FocusModelImpl : FocusModel {
     set(value) {
         field = value
         onCounterValueChanged()
+        if (field == MAX_VALUE) {
+            onFocusFinish()
+        }
     }
 
     private fun onCounterValueChanged() {
         for (listener in listeners){
             listener.onNewValue(counterValue)
+        }
+    }
+
+    private fun onFocusFinish(){
+        for (listener in listeners){
+            listener.onFocusFinish()
         }
     }
 

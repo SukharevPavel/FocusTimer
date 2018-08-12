@@ -1,8 +1,13 @@
 package ru.sukharev.focustimer.focus
 
 import android.content.Context
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.VibrationEffect.DEFAULT_AMPLITUDE
+import android.os.Vibrator
+import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -11,6 +16,7 @@ import ru.sukharev.focustimer.model.FocusModelImpl
 import ru.sukharev.focustimer.utils.bind
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
+
 
 
     override lateinit var presenter: FocusContract.Presenter
@@ -47,5 +53,30 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         presenter.stop()
     }
 
+
+    override fun notifyUserAboutFinish() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrateApi26()
+        } else {
+            vibrate();
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun vibrate() {
+        val vibrateService : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrateService.vibrate(VIBRATE_TIME_MILLIS)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun vibrateApi26() {
+        val vibrateService : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrationEffect = VibrationEffect.createOneShot(VIBRATE_TIME_MILLIS, VibrationEffect.DEFAULT_AMPLITUDE)
+        vibrateService.vibrate(vibrationEffect)
+    }
+
+    companion object {
+        const val  VIBRATE_TIME_MILLIS = 2000L
+    }
 
 }

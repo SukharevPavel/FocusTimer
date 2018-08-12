@@ -5,6 +5,9 @@ import ru.sukharev.focustimer.utils.getReadableTime
 
 class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
+    override fun onFocusFinish() {
+        view.notifyUserAboutFinish()
+    }
 
     override fun stop() {
         model.detachListener(this)
