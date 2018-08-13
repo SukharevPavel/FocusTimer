@@ -13,6 +13,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
+import ru.sukharev.focustimer.utils.Level
+import ru.sukharev.focustimer.utils.SPACE
 import ru.sukharev.focustimer.utils.bind
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
@@ -23,6 +25,7 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     private val focusProgressBar by bind<ProgressBar>(R.id.focus_progress_bar)
     private val focusButton by bind<FloatingActionButton>(R.id.focus_button)
     private val levelProgressBar by bind<ProgressBar>(R.id.focus_level_progress_bar)
+    private val levelText by bind<TextView>(R.id.focus_level_text)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +35,8 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
     }
 
-    override fun setMaxValues(maxProgress: Int, maxLevel: Int){
+    override fun setMaxValues(maxProgress: Int){
         focusProgressBar.max = maxProgress
-        levelProgressBar.max = maxLevel
     }
 
     override fun changeTimerAndProgressBar(newValue: String, progress: Int) {
@@ -42,8 +44,12 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         focusProgressBar.progress = progress
     }
 
-    override fun setLevel(value: Int) {
-        levelProgressBar.progress = value
+    override fun setLevel(level: Level, exp: Int) {
+        levelProgressBar.progress = exp
+        levelProgressBar.max = level.maxPoints
+        val textString = getString(R.string.level) + SPACE + level.ordinal;
+        levelText.text = textString
+
     }
 
     override fun getViewContext(): Context {

@@ -1,5 +1,7 @@
 package ru.sukharev.focustimer.model
 
+import ru.sukharev.focustimer.utils.LevelEntry
+
 interface FocusModel {
 
     fun switchCounter()
@@ -12,13 +14,11 @@ interface FocusModel {
 
     fun addCurrentExp(value : Int)
 
-    fun getMaxLevel(): Int
-
     interface Listener {
 
         fun onNewValue(value : Int)
 
-        fun onNewLevel(value: Int)
+        fun onNewLevel(levelEntry: LevelEntry)
 
         fun onFocusFinish()
 

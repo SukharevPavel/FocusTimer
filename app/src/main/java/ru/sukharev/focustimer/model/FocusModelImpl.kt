@@ -4,11 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
+import ru.sukharev.focustimer.utils.Level
+import ru.sukharev.focustimer.utils.LevelEntry
+import java.util.concurrent.TimeUnit
 
 class FocusModelImpl(applicationContext: Context) : FocusModel {
-    override fun getMaxLevel(): Int {
-        return MAX_LEVEL;
-    }
+
 
     val sharedPreferences: SharedPreferences
 
@@ -46,7 +47,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     private fun onLevelValueChanged(){
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
         for (listener in listeners){
-            listener.onNewLevel(exp)
+            listener.onNewLevel(Level.getLevelEntry(exp))
         }
     }
 
@@ -81,9 +82,9 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         val newDate = System.currentTimeMillis()
         val range = newDate  - oldDate
         if (!range.equals((0))) {
-            val newPoints = (curPoints - range / 10).toInt()
+            val newPoints = Level.calculateDecrease(curPoints, TimeUnit.MILLISECONDS.toSeconds(range).toInt())
             with(sharedPreferences.edit()){
-                putInt(FOCUS_EXP, Math.min(newPoints, MAX_LEVEL))
+                putInt(FOCUS_EXP, Math.min(newPoints, Level.FIVE.maxPoints))
                 putLong(FOCUS_ACCESS_DATE, newDate)
                 commit()
             }
@@ -106,6 +107,8 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     override fun attachListener(listener: FocusModel.Listener) {
         listeners.add(listener)
         listener.onNewValue(counterValue)
+        val exp = sharedPreferences.getInt(FOCUS_EXP,0)
+        listener.onNewLevel(Level.getLevelEntry(exp))
     }
 
     override fun detachListener(listener: FocusModel.Listener) {
@@ -121,7 +124,6 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         private const val FOCUS_PREFS = "focus_preferences"
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"
-        private const val MAX_LEVEL = 60*60
 
         private var instance : FocusModelImpl? = null
 

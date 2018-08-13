@@ -6,6 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="ru.sukharev.focustimer.focus.FocusActivity">
 
+    <TextView
+        android:id="@+id/focus_level_text"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/focus_level_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_above="@id/focus_level_progress_bar"/>
     <ProgressBar
         android:id="@+id/focus_level_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -42,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/focus_text"
         android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/focus_button_margin"
         app:backgroundTint="@color/colorPrimary"
         app:fabCustomSize="@dimen/focus_button_size" />
 

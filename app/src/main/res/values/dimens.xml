@@ -5,5 +5,8 @@
     <dimen name="focus_button_size">100dp</dimen>
     <dimen name="focus_text_size">30sp</dimen>
     <dimen name="focus_level_width">200dp</dimen>
+    <dimen name="vertical_progress_bar_margin">80dp</dimen>
     <dimen name="focus_level_height">30dp</dimen>
+    <dimen name="focus_button_margin">12dp</dimen>
+    <dimen name="focus_level_text_size">24sp</dimen>
 </resources>
