@@ -1,14 +1,14 @@
 package ru.sukharev.focustimer.utils
 
 enum class Level(val maxPoints: Int, val reductionModifier: Int) {
-    ONE(toSeconds(30), 50),
-    TWO(toSeconds(50),40),
-    THREE(toSeconds(70),30),
-    FOUR(toSeconds(100),20),
-    FIVE(toSeconds(500), 10);
+    ZERO(toSeconds(30), 50),
+    ONE(toSeconds(50),40),
+    TWO(toSeconds(70),30),
+    THREE(toSeconds(100),20),
+    FOUR(toSeconds(500), 10);
 
     fun getMinPoints():Int{
-        var total = 0;
+        var total = 0
         for (level in Level.values()) {
             if (ordinal > level.ordinal) {
                 total += level.maxPoints
@@ -21,7 +21,7 @@ enum class Level(val maxPoints: Int, val reductionModifier: Int) {
 
     companion object {
         fun calculateDecrease(curExp : Int, time : Int) : Int{
-            var curLevel = ONE
+            var curLevel = ZERO
             for (level in Level.values()) {
                 if (curExp > level.getMinPoints()) {
                     curLevel = level
@@ -39,7 +39,7 @@ enum class Level(val maxPoints: Int, val reductionModifier: Int) {
         }
 
         fun getLevelEntry(curExp: Int):LevelEntry{
-            var curLevel = ONE
+            var curLevel = ZERO
             for (level in Level.values()) {
                 if (curExp >= level.getMinPoints()) {
                     curLevel = level

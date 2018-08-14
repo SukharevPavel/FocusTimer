@@ -5,7 +5,6 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.VibrationEffect
-import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
@@ -13,9 +12,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
-import ru.sukharev.focustimer.utils.Level
-import ru.sukharev.focustimer.utils.SPACE
+import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.bind
+import ru.sukharev.focustimer.utils.views.LevelAnimator
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
 
@@ -26,11 +25,13 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     private val focusButton by bind<FloatingActionButton>(R.id.focus_button)
     private val levelProgressBar by bind<ProgressBar>(R.id.focus_level_progress_bar)
     private val levelText by bind<TextView>(R.id.focus_level_text)
+    private lateinit var levelAnimator : LevelAnimator
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_focus)
+        levelAnimator = LevelAnimator(levelProgressBar, levelText)
         presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance(this))
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
     }
@@ -40,16 +41,12 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     }
 
     override fun changeTimerAndProgressBar(newValue: String, progress: Int) {
-        focusTextView.text = newValue;
+        focusTextView.text = newValue
         focusProgressBar.progress = progress
     }
 
-    override fun setLevel(level: Level, exp: Int) {
-        levelProgressBar.progress = exp
-        levelProgressBar.max = level.maxPoints
-        val textString = getString(R.string.level) + SPACE + level.ordinal;
-        levelText.text = textString
-
+    override fun setLevel(levelEntry: LevelEntry) {
+        levelAnimator.setValues(levelEntry)
     }
 
     override fun getViewContext(): Context {
@@ -71,7 +68,7 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrateApi26()
         } else {
-            vibrate();
+            vibrate()
         }
     }
 

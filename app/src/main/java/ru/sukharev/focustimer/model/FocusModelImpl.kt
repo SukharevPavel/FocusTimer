@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import ru.sukharev.focustimer.utils.Level
-import ru.sukharev.focustimer.utils.LevelEntry
 import java.util.concurrent.TimeUnit
 
 class FocusModelImpl(applicationContext: Context) : FocusModel {
@@ -22,7 +21,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     val handler = Handler()
     val counterChangeRunnable = object: Runnable {
         override fun run() {
-            counterValue++;
+            counterValue++
             handler.postDelayed(this, 1000)
             if (counterValue == MAX_VALUE) {
                 dropCounter()
@@ -67,12 +66,17 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
 
     @SuppressLint("ApplySharedPref")
     override fun addCurrentExp(value : Int){
-        val newValue = value + sharedPreferences.getInt(FOCUS_EXP,0)
         with(sharedPreferences.edit()){
-            putInt(FOCUS_EXP, newValue)
+            putInt(FOCUS_EXP, getValidExpValue(value + sharedPreferences.getInt(FOCUS_EXP,0)))
             commit()
         }
         updateExpPrefs()
+    }
+
+    private fun getValidExpValue(value: Int) : Int{
+        val maxLevel = Level.values()[Level.values().size-1]
+        return Math.max(Math.min(value,
+                maxLevel.getMinPoints() + maxLevel.maxPoints),0)
     }
 
     @SuppressLint("ApplySharedPref")
@@ -84,7 +88,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         if (!range.equals((0))) {
             val newPoints = Level.calculateDecrease(curPoints, TimeUnit.MILLISECONDS.toSeconds(range).toInt())
             with(sharedPreferences.edit()){
-                putInt(FOCUS_EXP, Math.min(newPoints, Level.FIVE.maxPoints))
+                putInt(FOCUS_EXP, getValidExpValue(newPoints))
                 putLong(FOCUS_ACCESS_DATE, newDate)
                 commit()
             }
@@ -93,13 +97,13 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     }
 
     private fun dropCounter(){
-        counterValue = 0;
+        counterValue = 0
         state = CounterState.STOPPED
         handler.removeCallbacks(counterChangeRunnable)
     }
 
     private fun startCounter(){
-        counterValue = 0;
+        counterValue = 0
         state = CounterState.STARTED
         handler.postDelayed(counterChangeRunnable, 1000)
     }

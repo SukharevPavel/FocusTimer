@@ -8,15 +8,15 @@ class LevelTest {
 
     @Test
     fun getTotalPoints() {
-        assertEquals(0, Level.ONE.getMinPoints())
+        assertEquals(0, Level.ZERO.getMinPoints())
 
-        assertEquals(toSeconds(30), Level.TWO.getMinPoints())
+        assertEquals(toSeconds(30), Level.ONE.getMinPoints())
 
-        assertEquals(toSeconds(80), Level.THREE.getMinPoints())
+        assertEquals(toSeconds(80), Level.TWO.getMinPoints())
 
-        assertEquals(toSeconds(150), Level.FOUR.getMinPoints())
+        assertEquals(toSeconds(150), Level.THREE.getMinPoints())
 
-        assertEquals(toSeconds(250), Level.FIVE.getMinPoints())
+        assertEquals(toSeconds(250), Level.FOUR.getMinPoints())
     }
 
     @Test
@@ -46,16 +46,16 @@ class LevelTest {
 
     @Test
     fun getLevelEntry(){
-        assertEquals(LevelEntry(Level.ONE,0), Level.getLevelEntry(toSeconds(0)))
-        assertEquals(LevelEntry(Level.TWO,0), Level.getLevelEntry(toSeconds(30)))
-        assertEquals(LevelEntry(Level.THREE,0), Level.getLevelEntry(toSeconds(80)))
+        assertEquals(LevelEntry(Level.ZERO,0), Level.getLevelEntry(toSeconds(0)))
+        assertEquals(LevelEntry(Level.ONE,0), Level.getLevelEntry(toSeconds(30)))
+        assertEquals(LevelEntry(Level.TWO,0), Level.getLevelEntry(toSeconds(80)))
 
-        assertEquals(LevelEntry(Level.FOUR,0), Level.getLevelEntry(toSeconds(150)))
+        assertEquals(LevelEntry(Level.THREE,0), Level.getLevelEntry(toSeconds(150)))
 
-        assertEquals(LevelEntry(Level.FIVE,0), Level.getLevelEntry(toSeconds(250)))
+        assertEquals(LevelEntry(Level.FOUR,0), Level.getLevelEntry(toSeconds(250)))
 
-        assertEquals(LevelEntry(Level.THREE, toSeconds(20)), Level.getLevelEntry(toSeconds(100)))
-        assertEquals(LevelEntry(Level.FIVE, toSeconds(250)), Level.getLevelEntry(toSeconds(500)))
+        assertEquals(LevelEntry(Level.TWO, toSeconds(20)), Level.getLevelEntry(toSeconds(100)))
+        assertEquals(LevelEntry(Level.FOUR, toSeconds(250)), Level.getLevelEntry(toSeconds(500)))
 
 
     }

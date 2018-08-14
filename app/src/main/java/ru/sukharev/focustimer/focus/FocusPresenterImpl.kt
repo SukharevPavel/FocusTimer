@@ -7,7 +7,7 @@ import ru.sukharev.focustimer.utils.getReadableTime
 class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
     override fun onNewLevel(levelEntry: LevelEntry) {
-        view.setLevel(levelEntry.level, levelEntry.exp)
+        view.setLevel(levelEntry)
     }
 
     override fun onFocusFinish() {
@@ -19,6 +19,8 @@ class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): F
     }
 
     override fun start() {
+
+        model.addCurrentExp(Int.MIN_VALUE)
         model.attachListener(this)
         view.setMaxValues(model.getMaxValue())
     }
@@ -30,7 +32,8 @@ class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): F
 
 
     override fun focusButtonPressed() {
-        model.switchCounter()
+       // model.switchCounter()
+        model.addCurrentExp(50*60)
     }
 
 
