@@ -18,11 +18,12 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
         if (!initialized) {
             instantSetLevel(levelEntry)
             initialized = true
+            return
         }
         val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp - currentLevelEntry.level.getMinPoints()
         val baseExp = currentLevelEntry.exp
-        if (baseExp < totalExp) {
-            val totalDiff = totalExp - baseExp
+        if (baseExp != totalExp) {
+            val totalDiff = Math.abs(totalExp - baseExp)
             smoothSetLevel(levelEntry, totalDiff)
         } else {
             instantSetLevel(levelEntry)
@@ -48,8 +49,7 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
                     val newLevelIndex = currentLevelEntry.level.ordinal + 1
                     if (newLevelIndex < Level.values().size) {
                         val newLevel = Level.values()[newLevelIndex]
-                        currentLevelEntry = LevelEntry(newLevel, 0)
-                        instantSetLevel(currentLevelEntry)
+                        instantSetLevel(LevelEntry(newLevel, 0))
                         smoothSetLevel(levelEntry, totalDiff)
                     } else {
                         currentLevelEntry = levelEntry
@@ -67,8 +67,8 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
     }
 
     private fun instantSetLevel(levelEntry: LevelEntry){
-        levelProgressBar.progress = levelEntry.exp
         levelProgressBar.max = levelEntry.level.maxPoints
+        levelProgressBar.progress = levelEntry.exp
         val textString = levelTextView.context.getString(R.string.level) + SPACE + levelEntry.level.ordinal
         levelTextView.text = textString
         currentLevelEntry = levelEntry

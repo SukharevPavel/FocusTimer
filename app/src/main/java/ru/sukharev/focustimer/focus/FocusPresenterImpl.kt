@@ -19,8 +19,6 @@ class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): F
     }
 
     override fun start() {
-
-        model.addCurrentExp(Int.MIN_VALUE)
         model.attachListener(this)
         view.setMaxValues(model.getMaxValue())
     }
@@ -32,8 +30,7 @@ class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): F
 
 
     override fun focusButtonPressed() {
-       // model.switchCounter()
-        model.addCurrentExp(50*60)
+        model.switchCounter()
     }
 
 
