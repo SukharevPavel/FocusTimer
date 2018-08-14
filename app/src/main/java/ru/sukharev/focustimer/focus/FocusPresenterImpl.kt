@@ -5,7 +5,7 @@ import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.getReadableTime
 
-class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
+class FocusPresenterImpl(private val view :FocusContract.View, private val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
 
     override fun onStateChanged(state: CounterState) {
