@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
+import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.Level
 import java.util.concurrent.TimeUnit
 
@@ -18,6 +19,17 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
 
     val listeners = ArrayList<FocusModel.Listener>()
     var state = CounterState.STOPPED
+    set (value) {
+        field = value
+        onCounterStateChanged()
+    }
+
+    private fun onCounterStateChanged() {
+        for (listener in listeners) {
+            listener.onStateChanged(state)
+        }
+    }
+
     val handler = Handler()
     val counterChangeRunnable = object: Runnable {
         override fun run() {
@@ -57,7 +69,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         }
     }
 
-    override fun switchCounter() {
+    override fun switchCounter(){
         when (state) {
             CounterState.STARTED -> dropCounter()
             CounterState.STOPPED -> startCounter()
@@ -113,6 +125,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         listener.onNewValue(counterValue)
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
         listener.onNewLevel(Level.getLevelEntry(exp))
+        listener.onStateChanged(state)
     }
 
     override fun detachListener(listener: FocusModel.Listener) {
@@ -136,10 +149,6 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         }
 
 
-    }
-
-    enum class CounterState {
-        STARTED, STOPPED
     }
 
 }

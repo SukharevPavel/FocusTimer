@@ -3,6 +3,7 @@ package ru.sukharev.focustimer.focus
 import android.content.Context
 import ru.sukharev.focustimer.base.BasePresenter
 import ru.sukharev.focustimer.base.BaseView
+import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 
 
@@ -18,6 +19,8 @@ interface FocusContract {
         fun setMaxValues(maxProgress: Int)
 
         fun setLevel(levelEntry: LevelEntry)
+
+        fun changeFocusButtonState(state: CounterState)
     }
 
     interface Presenter : BasePresenter{

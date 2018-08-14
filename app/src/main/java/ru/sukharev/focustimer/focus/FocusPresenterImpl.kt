@@ -1,11 +1,17 @@
 package ru.sukharev.focustimer.focus
 
 import ru.sukharev.focustimer.model.FocusModel
+import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.getReadableTime
 
 class FocusPresenterImpl(val view :FocusContract.View, val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
+
+    override fun onStateChanged(state: CounterState) {
+        view.changeFocusButtonState(state)
+    }
+
     override fun onNewLevel(levelEntry: LevelEntry) {
         view.setLevel(levelEntry)
     }

@@ -1,5 +1,6 @@
 package ru.sukharev.focustimer.model
 
+import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 
 interface FocusModel {
@@ -21,6 +22,8 @@ interface FocusModel {
         fun onNewLevel(levelEntry: LevelEntry)
 
         fun onFocusFinish()
+
+        fun onStateChanged(state: CounterState)
 
     }
 

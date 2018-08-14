@@ -1,6 +1,7 @@
 package ru.sukharev.focustimer.focus
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -8,15 +9,18 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.widget.ProgressBar
 import android.widget.TextView
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
+import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.bind
 import ru.sukharev.focustimer.utils.views.LevelAnimator
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
+
 
     override lateinit var presenter: FocusContract.Presenter
 
@@ -61,6 +65,19 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     override fun onStop() {
         super.onStop()
         presenter.stop()
+    }
+
+    override fun changeFocusButtonState(state: CounterState) {
+        when (state) {
+            CounterState.STARTED -> {
+                focusButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.focus_button_red))
+                focusButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.focus_stop))
+            }
+            CounterState.STOPPED -> {
+                focusButton.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary))
+                focusButton.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.focus_start))
+            }
+        }
     }
 
 
