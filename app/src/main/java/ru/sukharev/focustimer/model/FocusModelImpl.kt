@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Handler
 import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.Level
+import ru.sukharev.focustimer.utils.SUCCESS_MULTIPLIER
 import java.util.concurrent.TimeUnit
 
 class FocusModelImpl(applicationContext: Context) : FocusModel {
@@ -37,6 +38,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
             handler.postDelayed(this, 1000)
             if (counterValue == MAX_VALUE) {
                 dropCounter()
+                onFocusFinish()
             }
         }
     }
@@ -44,9 +46,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     set(value) {
         field = value
         onCounterValueChanged()
-        if (field == MAX_VALUE) {
-            onFocusFinish()
-        }
+
     }
 
     private fun onCounterValueChanged() {
@@ -63,7 +63,6 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     }
 
     private fun onFocusFinish(){
-        addCurrentExp(counterValue)
         for (listener in listeners){
             listener.onFocusFinish()
         }
@@ -109,6 +108,11 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     }
 
     private fun dropCounter(){
+        if (counterValue == MAX_VALUE) {
+            addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
+        } else {
+            addCurrentExp(counterValue)
+        }
         counterValue = 0
         state = CounterState.STOPPED
         handler.removeCallbacks(counterChangeRunnable)
