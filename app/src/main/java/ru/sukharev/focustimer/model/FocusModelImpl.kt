@@ -141,7 +141,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     }
 
     companion object {
-        private const val MAX_VALUE = 15
+        private const val MAX_VALUE = 25 * 60
         private const val FOCUS_PREFS = "focus_preferences"
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"

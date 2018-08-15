@@ -10,6 +10,7 @@ import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
+import android.view.Menu
 import android.widget.ProgressBar
 import android.widget.TextView
 import ru.sukharev.focustimer.R
@@ -18,6 +19,9 @@ import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.bind
 import ru.sukharev.focustimer.utils.views.LevelAnimator
+import android.content.Intent
+import android.view.MenuItem
+
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
 
@@ -39,6 +43,20 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance(this))
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
         presenter.start()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.focus_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.getItemId().equals(R.id.menu_focus_setting)) {
+           // val intent = Intent(this@FocusActivity, SettingsActivity::class.java)
+          //  startActivity(intent)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun setMaxValues(maxProgress: Int){
