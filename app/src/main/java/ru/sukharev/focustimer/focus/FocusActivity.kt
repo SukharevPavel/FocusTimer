@@ -21,6 +21,7 @@ import ru.sukharev.focustimer.utils.bind
 import ru.sukharev.focustimer.utils.views.LevelAnimator
 import android.content.Intent
 import android.view.MenuItem
+import ru.sukharev.focustimer.settings.SettingsActivity
 
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
@@ -52,8 +53,8 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.getItemId().equals(R.id.menu_focus_setting)) {
-           // val intent = Intent(this@FocusActivity, SettingsActivity::class.java)
-          //  startActivity(intent)
+            val intent = Intent(this@FocusActivity, SettingsActivity::class.java)
+            startActivity(intent)
             return true
         }
         return super.onOptionsItemSelected(item)

@@ -76,4 +76,6 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="focus_time_prefs_title">Select focus time</string>
+    <string name="focus_failed_reward_pref_title">Reward for unsuccessful focus</string>
 </resources>
