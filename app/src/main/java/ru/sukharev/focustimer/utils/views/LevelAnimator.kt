@@ -22,7 +22,7 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
         }
         val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp - currentLevelEntry.level.getMinPoints()
         val baseExp = currentLevelEntry.exp
-        if (baseExp != totalExp) {
+        if (baseExp < totalExp) {
             val totalDiff = Math.abs(totalExp - baseExp)
             smoothSetLevel(levelEntry, totalDiff)
         } else {
