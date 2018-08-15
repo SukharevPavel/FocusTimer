@@ -38,6 +38,7 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         levelAnimator = LevelAnimator(levelProgressBar, levelText)
         presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance(this))
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
+        presenter.start()
     }
 
     override fun setMaxValues(maxProgress: Int){
@@ -57,13 +58,8 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         return this
     }
 
-    override fun onStart() {
-        super.onStart()
-        presenter.start()
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.stop()
     }
 
