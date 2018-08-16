@@ -2,21 +2,24 @@ package ru.sukharev.focustimer.utils
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.widget.TimePicker
 import android.preference.DialogPreference
 import android.util.AttributeSet
 import android.view.View
+import android.widget.NumberPicker
+import ru.sukharev.focustimer.R
+import ru.sukharev.focustimer.utils.views.CustomNumberPicker
 
 
-class TimePreference(val ctxt: Context, attrs: AttributeSet) : DialogPreference(ctxt, attrs) {
-    private var lastHour = 0
-    private var lastMinute = 0
-    private val picker: TimePicker
+class TimePreference(ctx: Context, attrs: AttributeSet) : DialogPreference(ctx, attrs) {
+    private var time = 0
+    private val picker: NumberPicker
 
     init {
-        picker = TimePicker(ctxt)
-        positiveButtonText = "Set"
-        negativeButtonText = "Cancel"
+        picker = CustomNumberPicker(context)
+        picker.minValue = 1
+        picker.maxValue = 120
+        positiveButtonText = context.getString(R.string.setting_focus_time_set)
+        negativeButtonText = context.getString(R.string.setting_focus_time_cancel)
     }
 
     override fun onCreateDialogView(): View {
@@ -25,22 +28,17 @@ class TimePreference(val ctxt: Context, attrs: AttributeSet) : DialogPreference(
 
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
-
-        picker.currentHour=lastHour
-        picker.currentMinute = lastMinute
+        picker.value = time
     }
 
     override fun onDialogClosed(positiveResult: Boolean) {
         super.onDialogClosed(positiveResult)
 
         if (positiveResult) {
-            lastHour = picker.currentHour
-            lastMinute = picker.currentMinute
-
-            val time = lastHour.toString() + ":" + lastMinute.toString()
+            time = picker.value
 
             if (callChangeListener(time)) {
-                persistString(time)
+                persistInt(time)
             }
         }
     }
@@ -50,34 +48,9 @@ class TimePreference(val ctxt: Context, attrs: AttributeSet) : DialogPreference(
     }
 
     override fun onSetInitialValue(restoreValue: Boolean, defaultValue: Any?) {
-        var time: String? = null
+        val default = context.resources.getInteger(R.integer.default_focus_time)
+        time = getPersistedInt(default)
 
-        if (restoreValue) {
-            if (defaultValue == null) {
-                time = getPersistedString("00:00")
-            } else {
-                time = getPersistedString(defaultValue.toString())
-            }
-        } else {
-            time = defaultValue!!.toString()
-        }
-
-        lastHour = getHour(time!!)
-        lastMinute = getMinute(time)
     }
 
-    companion object {
-
-        fun getHour(time: String): Int {
-            val pieces = time.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-            return Integer.parseInt(pieces[0])
-        }
-
-        fun getMinute(time: String): Int {
-            val pieces = time.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-            return Integer.parseInt(pieces[1])
-        }
-    }
 }

@@ -9,4 +9,5 @@
     <dimen name="focus_level_height">30dp</dimen>
     <dimen name="focus_button_margin">12dp</dimen>
     <dimen name="focus_level_text_size">24sp</dimen>
+    <dimen name="number_picker_text_size">14sp</dimen>
 </resources>

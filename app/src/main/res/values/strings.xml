@@ -78,4 +78,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="focus_time_prefs_title">Select focus time</string>
     <string name="focus_failed_reward_pref_title">Reward for unsuccessful focus</string>
+    <string name="setting_focus_time_set">Set</string>
+    <string name="setting_focus_time_cancel">Cancel</string>
 </resources>
