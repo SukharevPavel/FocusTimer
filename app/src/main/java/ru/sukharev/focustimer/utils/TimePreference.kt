@@ -12,17 +12,15 @@ import ru.sukharev.focustimer.utils.views.CustomNumberPicker
 
 class TimePreference(ctx: Context, attrs: AttributeSet) : DialogPreference(ctx, attrs) {
     private var time = 0
-    private val picker: NumberPicker
+    private lateinit var picker: NumberPicker
 
-    init {
+
+    override fun onCreateDialogView(): View {
         picker = CustomNumberPicker(context)
         picker.minValue = 1
         picker.maxValue = 120
         positiveButtonText = context.getString(R.string.setting_focus_time_set)
         negativeButtonText = context.getString(R.string.setting_focus_time_cancel)
-    }
-
-    override fun onCreateDialogView(): View {
         return picker
     }
 
@@ -52,5 +50,6 @@ class TimePreference(ctx: Context, attrs: AttributeSet) : DialogPreference(ctx, 
         time = getPersistedInt(default)
 
     }
+
 
 }
