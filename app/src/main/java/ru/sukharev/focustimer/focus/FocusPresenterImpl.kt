@@ -8,6 +8,12 @@ import ru.sukharev.focustimer.utils.getReadableTime
 class FocusPresenterImpl(private val view :FocusContract.View, private val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
 
+    var currentValue = 0
+
+    override fun onMaxValueChanged(maxValue: Int) {
+        view.setMaxValues(getReadableTime(currentValue, maxValue),maxValue)
+    }
+
     override fun onStateChanged(state: CounterState) {
         view.changeFocusButtonState(state)
     }
@@ -26,10 +32,10 @@ class FocusPresenterImpl(private val view :FocusContract.View, private val model
 
     override fun start() {
         model.attachListener(this)
-        view.setMaxValues(model.getMaxValue())
     }
 
     override fun onNewValue(value: Int) {
+        currentValue = value
         view.changeTimerAndProgressBar(getReadableTime(value, model.getMaxValue()),
                 value)
     }

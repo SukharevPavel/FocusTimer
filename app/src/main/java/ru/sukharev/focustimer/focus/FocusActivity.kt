@@ -60,7 +60,8 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setMaxValues(maxProgress: Int){
+    override fun setMaxValues(newValue: String, maxProgress: Int){
+        focusTextView.text = newValue
         focusProgressBar.max = maxProgress
     }
 

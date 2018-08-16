@@ -16,7 +16,7 @@ interface FocusContract {
 
         fun notifyUserAboutFinish()
 
-        fun setMaxValues(maxProgress: Int)
+        fun setMaxValues(newText:String, maxProgress: Int)
 
         fun setLevel(levelEntry: LevelEntry)
 

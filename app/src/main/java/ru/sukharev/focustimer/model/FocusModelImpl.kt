@@ -4,39 +4,42 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
+import android.preference.PreferenceManager
+import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.Level
 import ru.sukharev.focustimer.utils.SUCCESS_MULTIPLIER
+import ru.sukharev.focustimer.utils.toSeconds
 import java.util.concurrent.TimeUnit
 
-class FocusModelImpl(applicationContext: Context) : FocusModel {
+class FocusModelImpl(val applicationContext: Context) : FocusModel {
 
-
-    val sharedPreferences: SharedPreferences
-
+    private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+    private val preferencesListener = SharedPreferences.OnSharedPreferenceChangeListener {
+        _, key ->
+        if (key == applicationContext.getString(R.string.focus_time_key)){
+            onMaxValueChanged()
+        }
+    }
     init {
-        sharedPreferences = applicationContext.getSharedPreferences(FOCUS_PREFS, Context.MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
     }
 
+    private val MAX_VALUE = {
+        toSeconds(sharedPreferences.getInt(applicationContext.getString(R.string.focus_time_key),
+            applicationContext.resources.getInteger(R.integer.default_focus_time)))}
     val listeners = ArrayList<FocusModel.Listener>()
     var state = CounterState.STOPPED
     set (value) {
         field = value
         onCounterStateChanged()
     }
-
-    private fun onCounterStateChanged() {
-        for (listener in listeners) {
-            listener.onStateChanged(state)
-        }
-    }
-
     val handler = Handler()
     val counterChangeRunnable = object: Runnable {
         override fun run() {
             counterValue++
             handler.postDelayed(this, 1000)
-            if (counterValue == MAX_VALUE) {
+            if (counterValue >= MAX_VALUE()) {
                 dropCounter()
                 onFocusFinish()
             }
@@ -49,9 +52,21 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
 
     }
 
+    private fun onCounterStateChanged() {
+        for (listener in listeners) {
+            listener.onStateChanged(state)
+        }
+    }
+
     private fun onCounterValueChanged() {
         for (listener in listeners){
             listener.onNewValue(counterValue)
+        }
+    }
+
+    private fun onMaxValueChanged() {
+        for (listener in listeners){
+            listener.onMaxValueChanged(MAX_VALUE())
         }
     }
 
@@ -73,6 +88,10 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
             CounterState.STARTED -> dropCounter()
             CounterState.STOPPED -> startCounter()
         }
+    }
+
+    override fun getMaxValue(): Int {
+        return MAX_VALUE()
     }
 
     @SuppressLint("ApplySharedPref")
@@ -108,7 +127,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
     }
 
     private fun dropCounter(){
-        if (counterValue == MAX_VALUE) {
+        if (counterValue == MAX_VALUE()) {
             addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
         } else {
             addCurrentExp(counterValue)
@@ -126,6 +145,7 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
 
     override fun attachListener(listener: FocusModel.Listener) {
         listeners.add(listener)
+        listener.onMaxValueChanged(MAX_VALUE())
         listener.onNewValue(counterValue)
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
         listener.onNewLevel(Level.getLevelEntry(exp))
@@ -136,13 +156,8 @@ class FocusModelImpl(applicationContext: Context) : FocusModel {
         listeners.remove(listener)
     }
 
-    override fun getMaxValue(): Int {
-        return MAX_VALUE
-    }
 
     companion object {
-        private const val MAX_VALUE = 25 * 60
-        private const val FOCUS_PREFS = "focus_preferences"
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"
 

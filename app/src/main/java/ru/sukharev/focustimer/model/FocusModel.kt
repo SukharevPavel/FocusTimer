@@ -11,9 +11,9 @@ interface FocusModel {
 
     fun detachListener(listener : Listener)
 
-    fun getMaxValue() : Int
-
     fun addCurrentExp(value : Int)
+
+    fun getMaxValue() : Int
 
     interface Listener {
 
@@ -24,6 +24,8 @@ interface FocusModel {
         fun onFocusFinish()
 
         fun onStateChanged(state: CounterState)
+
+        fun onMaxValueChanged(maxValue: Int)
 
     }
 
