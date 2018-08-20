@@ -130,7 +130,10 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
         if (counterValue == MAX_VALUE()) {
             addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
         } else {
-            addCurrentExp(counterValue)
+            if (sharedPreferences.getBoolean(applicationContext.getString(R.string.focus_failed_reward_key),
+                            false)) {
+                addCurrentExp(counterValue)
+            }
         }
         counterValue = 0
         state = CounterState.STOPPED
