@@ -24,7 +24,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
 
     private val MAX_VALUE = {
         toSeconds(sharedPreferences.getInt(applicationContext.getString(R.string.focus_time_key),
-            applicationContext.resources.getInteger(R.integer.default_focus_time)))}
+            applicationContext.resources.getInteger(R.integer.focus_time_default_value)))}
     val listeners = ArrayList<FocusModel.Listener>()
     var state = CounterState.STOPPED
     set (value) {

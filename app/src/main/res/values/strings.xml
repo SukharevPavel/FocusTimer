@@ -15,4 +15,5 @@
     <string name="focus_ringtone_default_key">content://settings/system/notification_sound</string>
     <string name="focus_vibrate">Vibrate</string>
     <string name="focus_vibrate_key" translatable="false">focus_vibrate_key</string>
+    <string name="silent">Silent</string>
 </resources>

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ru.sukharev.focustimer.utils.TimePreference
         android:key="@string/focus_time_key"
-        android:defaultValue="@integer/default_focus_time"
+        android:defaultValue="@integer/focus_time_default_value"
         android:title="@string/focus_time_prefs_title"/>
     <CheckBoxPreference android:title="@string/focus_failed_reward_pref_title"
         android:defaultValue="@bool/default_reward_for_unsuccessful"

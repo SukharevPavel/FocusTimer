@@ -46,7 +46,7 @@ class TimePreference(ctx: Context, attrs: AttributeSet) : DialogPreference(ctx, 
     }
 
     override fun onSetInitialValue(restoreValue: Boolean, defaultValue: Any?) {
-        val default = context.resources.getInteger(R.integer.default_focus_time)
+        val default = context.resources.getInteger(R.integer.focus_time_default_value)
         time = getPersistedInt(default)
 
     }
