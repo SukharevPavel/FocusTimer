@@ -1,27 +1,30 @@
 package ru.sukharev.focustimer.focus
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.ProgressBar
 import android.widget.TextView
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
+import ru.sukharev.focustimer.settings.SettingsActivity
 import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.bind
+import ru.sukharev.focustimer.utils.playSound
 import ru.sukharev.focustimer.utils.views.LevelAnimator
-import android.content.Intent
-import android.view.MenuItem
-import ru.sukharev.focustimer.settings.SettingsActivity
 
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
@@ -60,8 +63,8 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setMaxValues(newValue: String, maxProgress: Int){
-        focusTextView.text = newValue
+    override fun setMaxValues(newText: String, maxProgress: Int){
+        focusTextView.text = newText
         focusProgressBar.max = maxProgress
     }
 
@@ -98,10 +101,18 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
 
 
     override fun notifyUserAboutFinish() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrateApi26()
-        } else {
-            vibrate()
+        val preferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val alarms = preferences.getString(getString(R.string.focus_ringtone_key),
+                getString(R.string.focus_ringtone_default_key))
+        val uri = Uri.parse(alarms)
+        playSound(baseContext, uri)
+        if (preferences.getBoolean(getString(R.string.focus_vibrate_key),
+                        applicationContext.resources.getBoolean(R.bool.default_vibrate))) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrateApi26()
+            } else {
+                vibrate()
+            }
         }
     }
 

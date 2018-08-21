@@ -7,7 +7,12 @@
     <string name="setting_focus_time_set">Set</string>
     <string name="setting_focus_time_cancel">Cancel</string>
     <string name="focus_time_key" translatable="false">focus_time_key</string>
-    <string name="focus_failed_reward_key" translatable="false">focus_failed_reward</string>
+    <string name="focus_failed_reward_key" translatable="false">focus_failed_reward_key</string>
+    <string name="focus_ringtone_key" translatable="false">focus_ringtone_key</string>
     <string name="notification_channel_name">Focus Timer notification channel</string>
     <string name="notification_focus_finished">Focus is finished! Check your progress</string>
+    <string name="focus_ringtone">Choose finished focus ringtone</string>
+    <string name="focus_ringtone_default_key">content://settings/system/notification_sound</string>
+    <string name="focus_vibrate">Vibrate</string>
+    <string name="focus_vibrate_key" translatable="false">focus_vibrate_key</string>
 </resources>

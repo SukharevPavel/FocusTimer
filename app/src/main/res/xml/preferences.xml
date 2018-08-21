@@ -7,4 +7,13 @@
     <CheckBoxPreference android:title="@string/focus_failed_reward_pref_title"
         android:defaultValue="@bool/default_reward_for_unsuccessful"
         android:key="@string/focus_failed_reward_key" />
+    <RingtonePreference
+        android:defaultValue="@string/focus_ringtone_default_key"
+        android:key="@string/focus_ringtone_key"
+        android:ringtoneType="notification"
+        android:title="@string/focus_ringtone"/>
+    <SwitchPreference
+        android:defaultValue="@bool/default_vibrate"
+        android:key="@string/focus_vibrate_key"
+        android:title="@string/focus_vibrate"/>
 </PreferenceScreen>

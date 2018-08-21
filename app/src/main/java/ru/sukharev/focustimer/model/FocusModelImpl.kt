@@ -129,7 +129,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
             addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
         } else {
             if (sharedPreferences.getBoolean(applicationContext.getString(R.string.focus_failed_reward_key),
-                            false)) {
+                            applicationContext.resources.getBoolean(R.bool.default_reward_for_unsuccessful))) {
                 addCurrentExp(counterValue)
             }
         }
