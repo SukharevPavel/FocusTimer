@@ -21,6 +21,7 @@ fun playSound(context: Context, alert: Uri) {
                     .setLegacyStreamType(AudioManager.STREAM_ALARM)
             mediaPlayer.setAudioAttributes(attributes.build())
         } else {
+            @Suppress("DEPRECATION")
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM)
         }
         mediaPlayer.prepare()
