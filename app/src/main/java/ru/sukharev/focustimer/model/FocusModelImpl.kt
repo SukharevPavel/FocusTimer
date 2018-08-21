@@ -6,10 +6,7 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.preference.PreferenceManager
 import ru.sukharev.focustimer.R
-import ru.sukharev.focustimer.utils.CounterState
-import ru.sukharev.focustimer.utils.Level
-import ru.sukharev.focustimer.utils.SUCCESS_MULTIPLIER
-import ru.sukharev.focustimer.utils.toSeconds
+import ru.sukharev.focustimer.utils.*
 import java.util.concurrent.TimeUnit
 
 class FocusModelImpl(val applicationContext: Context) : FocusModel {
@@ -78,6 +75,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
     }
 
     private fun onFocusFinish(){
+        sendFocusFinishedNotification(applicationContext)
         for (listener in listeners){
             listener.onFocusFinish()
         }
@@ -164,6 +162,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"
 
+        @SuppressLint("StaticFieldLeak")
         private var instance : FocusModelImpl? = null
 
         fun getInstance(context: Context) : FocusModelImpl{

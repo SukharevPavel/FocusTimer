@@ -8,4 +8,6 @@
     <string name="setting_focus_time_cancel">Cancel</string>
     <string name="focus_time_key" translatable="false">focus_time_key</string>
     <string name="focus_failed_reward_key" translatable="false">focus_failed_reward</string>
+    <string name="notification_channel_name">Focus Timer notification channel</string>
+    <string name="notification_focus_finished">Focus is finished! Check your progress</string>
 </resources>
