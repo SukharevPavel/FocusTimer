@@ -40,7 +40,7 @@ class TimePreference(ctx: Context, attrs: AttributeSet) : DialogPreference(ctx, 
         super.onDialogClosed(positiveResult)
 
         if (positiveResult) {
-            time = picker.displayedValues.get(picker.value).toInt()
+            time = picker.displayedValues[picker.value].toInt()
 
             if (callChangeListener(time)) {
                 persistInt(time)
