@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 fun <T : View> Activity.bind(@IdRes res : Int) : Lazy<T> {
     @Suppress("UNCHECKED_CAST")
-    return lazy { findViewById(res) as T }
+    return lazy { findViewById<T>(res) }
 }
 
 fun toSeconds(minutes : Int) : Int {

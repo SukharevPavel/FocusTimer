@@ -9,7 +9,7 @@ import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.utils.*
 import java.util.concurrent.TimeUnit
 
-class FocusModelImpl(val applicationContext: Context) : FocusModel {
+class FocusModelImpl(private val applicationContext: Context) : FocusModel {
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
     private val preferencesListener = SharedPreferences.OnSharedPreferenceChangeListener {
@@ -22,27 +22,27 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener)
     }
 
-    private val MAX_VALUE = {
+    private val maxValue = {
         toSeconds(sharedPreferences.getInt(applicationContext.getString(R.string.focus_time_key),
             applicationContext.resources.getInteger(R.integer.focus_time_default_value)))}
-    val listeners = ArrayList<FocusModel.Listener>()
-    var state = CounterState.STOPPED
+    private val listeners = ArrayList<FocusModel.Listener>()
+    private var state = CounterState.STOPPED
     set (value) {
         field = value
         onCounterStateChanged()
     }
-    val handler = Handler()
-    val counterChangeRunnable = object: Runnable {
+    private val handler = Handler()
+    private val counterChangeRunnable = object: Runnable {
         override fun run() {
             counterValue++
             handler.postDelayed(this, 1000)
-            if (counterValue >= MAX_VALUE()) {
+            if (counterValue >= maxValue()) {
                 dropCounter()
                 onFocusFinish()
             }
         }
     }
-    var counterValue = 0
+    private var counterValue = 0
     set(value) {
         field = value
         onCounterValueChanged()
@@ -63,7 +63,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
 
     private fun onMaxValueChanged() {
         for (listener in listeners){
-            listener.onMaxValueChanged(MAX_VALUE())
+            listener.onMaxValueChanged(maxValue())
         }
     }
 
@@ -89,7 +89,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
     }
 
     override fun getMaxValue(): Int {
-        return MAX_VALUE()
+        return maxValue()
     }
 
     @SuppressLint("ApplySharedPref")
@@ -113,7 +113,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
         val oldDate = sharedPreferences.getLong(FOCUS_ACCESS_DATE, System.currentTimeMillis())
         val newDate = System.currentTimeMillis()
         val range = newDate  - oldDate
-        if (!range.equals((0))) {
+        if (range != 0L) {
             val newPoints = Level.calculateDecrease(curPoints, TimeUnit.MILLISECONDS.toSeconds(range).toInt())
             with(sharedPreferences.edit()){
                 putInt(FOCUS_EXP, getValidExpValue(newPoints))
@@ -125,7 +125,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
     }
 
     private fun dropCounter(){
-        if (counterValue == MAX_VALUE()) {
+        if (counterValue == maxValue()) {
             addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
         } else {
             if (sharedPreferences.getBoolean(applicationContext.getString(R.string.focus_failed_reward_key),
@@ -146,7 +146,7 @@ class FocusModelImpl(val applicationContext: Context) : FocusModel {
 
     override fun attachListener(listener: FocusModel.Listener) {
         listeners.add(listener)
-        listener.onMaxValueChanged(MAX_VALUE())
+        listener.onMaxValueChanged(maxValue())
         listener.onNewValue(counterValue)
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
         listener.onNewLevel(Level.getLevelEntry(exp))

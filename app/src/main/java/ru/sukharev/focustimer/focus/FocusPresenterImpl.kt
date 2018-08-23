@@ -8,7 +8,7 @@ import ru.sukharev.focustimer.utils.getReadableTime
 class FocusPresenterImpl(private val view :FocusContract.View, private val model: FocusModel): FocusContract.Presenter,
     FocusModel.Listener{
 
-    var currentValue = 0
+    private var currentValue = 0
 
     override fun onMaxValueChanged(maxValue: Int) {
         view.setMaxValues(getReadableTime(currentValue, maxValue),maxValue)

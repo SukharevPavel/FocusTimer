@@ -55,7 +55,7 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.getItemId().equals(R.id.menu_focus_setting)) {
+        if (item.itemId == R.id.menu_focus_setting) {
             val intent = Intent(this@FocusActivity, SettingsActivity::class.java)
             startActivity(intent)
             return true
