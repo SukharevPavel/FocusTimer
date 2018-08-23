@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Focus Timer</string>
-    <string name="level">Level</string>
+    <string name="level">Level:</string>
     <string name="focus_setting">Settings</string>
     <string name="focus_time_prefs_title">Select focus time</string>
     <string name="focus_failed_reward_pref_title">Reward for unsuccessful focus</string>
@@ -11,4 +11,12 @@
     <string name="focus_ringtone">Choose finished focus ringtone</string>
     <string name="focus_vibrate">Vibrate</string>
     <string name="silent">Silent</string>
+    <string-array name="levels">
+        <item>Novice</item>
+        <item>Beginner</item>
+        <item>Apprentice</item>
+        <item>Adept</item>
+        <item>Expert</item>
+        <item>Master</item>
+    </string-array>
 </resources>

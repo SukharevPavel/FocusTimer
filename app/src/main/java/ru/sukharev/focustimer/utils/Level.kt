@@ -1,5 +1,8 @@
 package ru.sukharev.focustimer.utils
 
+import android.content.Context
+import ru.sukharev.focustimer.R
+
 enum class Level(val maxPoints: Int, val reductionModifier: Int) {
     ZERO(toSeconds(30), 50),
     ONE(toSeconds(50),40),
@@ -17,6 +20,10 @@ enum class Level(val maxPoints: Int, val reductionModifier: Int) {
             }
         }
         return total
+    }
+
+    fun getName(context : Context) : String{
+        return context.resources.getStringArray(R.array.levels)[ordinal];
     }
 
     companion object {

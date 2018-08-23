@@ -69,7 +69,7 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
     private fun instantSetLevel(levelEntry: LevelEntry){
         levelProgressBar.max = levelEntry.level.maxPoints
         levelProgressBar.progress = levelEntry.exp
-        val textString = levelTextView.context.getString(R.string.level) + SPACE + levelEntry.level.ordinal
+        val textString = levelTextView.context.getString(R.string.level) + SPACE + levelEntry.level.getName(levelTextView.context)
         levelTextView.text = textString
         currentLevelEntry = levelEntry
     }
