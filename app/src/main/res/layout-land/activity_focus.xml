@@ -57,7 +57,6 @@
         android:layout_toEndOf="@id/focus_text"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/focus_button_margin"
-        android:src="@drawable/focus_start"
         android:scaleType="center"
         app:backgroundTint="@color/colorPrimary"
         app:fabCustomSize="@dimen/focus_button_size" />

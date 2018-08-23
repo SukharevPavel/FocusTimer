@@ -66,6 +66,7 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     override fun setMaxValues(newText: String, maxProgress: Int){
         focusTextView.text = newText
         focusProgressBar.max = maxProgress
+        focusProgressBar.secondaryProgress = maxProgress
     }
 
     override fun changeTimerAndProgressBar(newValue: String, progress: Int) {

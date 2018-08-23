@@ -15,16 +15,16 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -80,16 +80,17 @@ class SettingsActivity : AppCompatActivity() {
         override fun onCreate(savedInstanceState : Bundle?)
         {
             super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.preferences);
+            addPreferencesFromResource(R.xml.preferences)
             with (findPreference(getString(R.string.focus_ringtone_key))){
                 onPreferenceChangeListener = ringtoneListener
                 ringtoneListener.onPreferenceChange(this,
-                        PreferenceManager.getDefaultSharedPreferences(context)
+                        PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
                                 .getString(key,getString(R.string.focus_ringtone_default_key)))
             }
             with (findPreference(getString(R.string.focus_time_key))) {
                 onPreferenceChangeListener = timeListener
-                timeListener.onPreferenceChange(this,PreferenceManager.getDefaultSharedPreferences(context)
+                timeListener.onPreferenceChange(this,
+                        PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
                         .getInt(key,resources.getInteger(R.integer.focus_time_default_value)))
             }
 

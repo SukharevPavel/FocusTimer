@@ -50,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/focus_text"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/focus_start"
         android:scaleType="center"
         android:layout_margin="@dimen/focus_button_margin"
         app:backgroundTint="@color/colorPrimary"
