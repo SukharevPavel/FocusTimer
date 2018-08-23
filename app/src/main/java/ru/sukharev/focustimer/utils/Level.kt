@@ -4,11 +4,12 @@ import android.content.Context
 import ru.sukharev.focustimer.R
 
 enum class Level(val maxPoints: Int, val reductionModifier: Int) {
-    ZERO(toSeconds(30), 50),
-    ONE(toSeconds(50),40),
-    TWO(toSeconds(70),30),
-    THREE(toSeconds(100),20),
-    FOUR(toSeconds(500), 10);
+    ZERO(toSeconds(40), 100),
+    ONE(toSeconds(60),80),
+    TWO(toSeconds(100),60),
+    THREE(toSeconds(150),50),
+    FOUR(toSeconds(250), 30),
+    FIVE(toSeconds(500), 10);
 
     fun getMinPoints():Int{
         var total = 0
