@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="focus_ringtone_default_key" translatable="false">content://settings/system/notification_sound</string>
+    <string name="focus_time_key" translatable="false">focus_time_key</string>
+    <string name="focus_failed_reward_key" translatable="false">focus_failed_reward_key</string>
+    <string name="focus_ringtone_key" translatable="false">focus_ringtone_key</string>
+    <string name="focus_vibrate_key" translatable="false">focus_vibrate_key</string>
+</resources>

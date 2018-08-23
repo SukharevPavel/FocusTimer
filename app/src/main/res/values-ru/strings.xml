@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Focus Timer</string>
+    <string name="level">Уровень</string>
+    <string name="focus_setting">Настройки</string>
+    <string name="focus_time_prefs_title">Выберите время фокуса</string>
+    <string name="focus_failed_reward_pref_title">Награда за неудачный фокус</string>
+    <string name="setting_focus_time_set">Установить</string>
+    <string name="setting_focus_time_cancel">Отмена</string>
+    <string name="notification_channel_name">Канал уведомлений Focus Timer</string>
+    <string name="notification_focus_finished">Фокус закончен! Проверьте ваш прогресс</string>
+    <string name="focus_ringtone">Выберите звук для окончания фокуса</string>
+    <string name="focus_vibrate">Вибрация</string>
+    <string name="silent">Нет звука</string>
+</resources>
