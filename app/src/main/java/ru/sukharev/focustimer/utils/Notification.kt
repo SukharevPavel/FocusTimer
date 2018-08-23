@@ -36,7 +36,7 @@ fun sendFocusFinishedNotification(context: Context){
             PendingIntent.FLAG_ONE_SHOT)
     val builder = NotificationCompat.Builder(context,
             NOTIFICATION_CHANNEL_STRING)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_app_icon)
             .setContentTitle(context.getString(R.string.app_name))
             .setContentText(context.getString(R.string.notification_focus_finished))
             .setAutoCancel(true)
