@@ -10,8 +10,9 @@
         android:id="@+id/focus_level_text"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/focus_level_text_size"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/focus_level_width"
         android:layout_height="@dimen/focus_level_text_height"
+        android:layout_centerInParent="true"
         android:gravity="center"
         android:layout_above="@id/focus_level_progress_bar"
         app:autoSizeTextType="uniform"/>
