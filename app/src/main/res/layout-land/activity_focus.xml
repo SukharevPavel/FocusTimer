@@ -5,17 +5,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="ru.sukharev.focustimer.focus.FocusActivity">
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/focus_level_text"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/focus_level_text_size"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/focus_level_text_height"
         android:gravity="center"
         android:layout_above="@id/focus_level_progress_bar"
         android:layout_marginBottom="@dimen/vertical_progress_bar_margin"
         android:layout_toLeftOf="@id/focus_text"
         android:layout_toStartOf="@id/focus_text"
+        app:autoSizeTextType="uniform"
         />
     <ProgressBar
         android:id="@+id/focus_level_progress_bar"
