@@ -34,7 +34,10 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
     private val handler = Handler()
     private val counterChangeRunnable = object: Runnable {
         override fun run() {
-            counterValue++
+            val startMillisVal = startMillis
+            counterValue = if (startMillisVal != null)
+                ((System.currentTimeMillis() - startMillisVal)/ REFRESH_PERIOD).toInt()
+            else counterValue+1
             handler.postDelayed(this, 1000)
             if (counterValue >= maxValue()) {
                 dropCounter()
@@ -48,6 +51,7 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
         onCounterValueChanged()
 
     }
+    private var startMillis : Long? = null
 
     private fun onCounterStateChanged() {
         for (listener in listeners) {
@@ -140,8 +144,9 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
 
     private fun startCounter(){
         counterValue = 0
+        startMillis = System.currentTimeMillis()
         state = CounterState.STARTED
-        handler.postDelayed(counterChangeRunnable, 1000)
+        handler.postDelayed(counterChangeRunnable, REFRESH_PERIOD)
     }
 
     override fun attachListener(listener: FocusModel.Listener) {
@@ -159,6 +164,7 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
 
 
     companion object {
+        private const val REFRESH_PERIOD = 1000L
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"
 
