@@ -98,11 +98,12 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
 
     @SuppressLint("ApplySharedPref")
     override fun addCurrentExp(value : Int){
+        updateExpPrefs()
         with(sharedPreferences.edit()){
             putInt(FOCUS_EXP, getValidExpValue(value + sharedPreferences.getInt(FOCUS_EXP,0)))
             commit()
         }
-        updateExpPrefs()
+        onLevelValueChanged()
     }
 
     private fun getValidExpValue(value: Int) : Int{
@@ -124,7 +125,6 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
                 putLong(FOCUS_ACCESS_DATE, newDate)
                 commit()
             }
-            onLevelValueChanged()
         }
     }
 
