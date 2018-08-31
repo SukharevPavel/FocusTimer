@@ -2,4 +2,5 @@
 <resources>
     <integer name="focus_time_default_value">25</integer>
     <bool name="default_reward_for_unsuccessful">false</bool>
+    <bool name="default_vibrate">true</bool>
 </resources>
