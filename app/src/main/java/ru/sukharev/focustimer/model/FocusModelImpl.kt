@@ -55,6 +55,7 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         for (listener in listeners){
             listener.onMaxValueChanged(maxValue())
         }
+        serviceListener?.durationChanged(maxValue())
     }
 
     private fun onLevelValueChanged(){
