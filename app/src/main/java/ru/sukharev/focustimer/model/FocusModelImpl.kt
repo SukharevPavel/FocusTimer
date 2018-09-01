@@ -2,14 +2,15 @@ package ru.sukharev.focustimer.model
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Handler
 import android.preference.PreferenceManager
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.utils.*
 import java.util.concurrent.TimeUnit
 
-class FocusModelImpl(private val applicationContext: Context) : FocusModel {
+class FocusModelImpl private constructor(private val applicationContext: Context) : IFocusModel {
+
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
     private val preferencesListener = SharedPreferences.OnSharedPreferenceChangeListener {
@@ -25,33 +26,17 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
     private val maxValue = {
         toSeconds(sharedPreferences.getInt(applicationContext.getString(R.string.focus_time_key),
             applicationContext.resources.getInteger(R.integer.focus_time_default_value)))}
-    private val listeners = ArrayList<FocusModel.Listener>()
+    private var serviceListener : ITimerService? = null
+    private val listeners = ArrayList<IFocusModel.Listener>()
     private var state = CounterState.STOPPED
     set (value) {
         field = value
         onCounterStateChanged()
     }
-    private val handler = Handler()
-    private val counterChangeRunnable = object: Runnable {
-        override fun run() {
-            val startMillisVal = startMillis
-            counterValue = if (startMillisVal != null)
-                ((System.currentTimeMillis() - startMillisVal)/ REFRESH_PERIOD).toInt()
-            else counterValue+1
-            handler.postDelayed(this, 1000)
-            if (counterValue >= maxValue()) {
-                dropCounter()
-                onFocusFinish()
-            }
-        }
-    }
-    private var counterValue = 0
-    set(value) {
-        field = value
-        onCounterValueChanged()
 
+    override fun setServiceListener(serviceListener: ITimerService) {
+        this.serviceListener = serviceListener
     }
-    private var startMillis : Long? = null
 
     private fun onCounterStateChanged() {
         for (listener in listeners) {
@@ -59,11 +44,12 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
         }
     }
 
-    private fun onCounterValueChanged() {
+    override fun notifyValueChanged(value: Int) {
         for (listener in listeners){
-            listener.onNewValue(counterValue)
+            listener.onNewValue(value)
         }
     }
+
 
     private fun onMaxValueChanged() {
         for (listener in listeners){
@@ -78,10 +64,12 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
         }
     }
 
-    private fun onFocusFinish(){
-        sendFocusFinishedNotification(applicationContext)
+    private fun onFocusFinish(successful: Boolean){
+        if (successful) {
+            sendFocusFinishedNotification(applicationContext)
+        }
         for (listener in listeners){
-            listener.onFocusFinish()
+            listener.onFocusFinish(successful)
         }
     }
 
@@ -128,43 +116,44 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
         }
     }
 
-    private fun dropCounter(){
-        if (counterValue == maxValue()) {
-            addCurrentExp(counterValue* SUCCESS_MULTIPLIER)
+    override fun notifyFocusFinished(value: Int, interrupted: Boolean) {
+        if (!interrupted) {
+            addCurrentExp(value* SUCCESS_MULTIPLIER)
         } else {
             if (sharedPreferences.getBoolean(applicationContext.getString(R.string.focus_failed_reward_key),
                             applicationContext.resources.getBoolean(R.bool.default_reward_for_unsuccessful))) {
-                addCurrentExp(counterValue)
+                addCurrentExp(value)
             }
         }
-        counterValue = 0
+        onFocusFinish(!interrupted)
         state = CounterState.STOPPED
-        handler.removeCallbacks(counterChangeRunnable)
+    }
+
+    private fun dropCounter(){
+        serviceListener?.dropCounter()
     }
 
     private fun startCounter(){
-        counterValue = 0
-        startMillis = System.currentTimeMillis()
+        val intent = Intent(applicationContext, TimerServiceImpl::class.java)
+        intent.putExtra(TimerServiceImpl.EXTRA_DURATION, maxValue())
+        applicationContext.startService(intent)
         state = CounterState.STARTED
-        handler.postDelayed(counterChangeRunnable, REFRESH_PERIOD)
     }
 
-    override fun attachListener(listener: FocusModel.Listener) {
+    override fun attachListener(listener: IFocusModel.Listener) {
         listeners.add(listener)
         listener.onMaxValueChanged(maxValue())
-        listener.onNewValue(counterValue)
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
         listener.onNewLevel(Level.getLevelEntry(exp))
         listener.onStateChanged(state)
     }
 
-    override fun detachListener(listener: FocusModel.Listener) {
+    override fun detachListener(listener: IFocusModel.Listener) {
         listeners.remove(listener)
     }
 
 
     companion object {
-        private const val REFRESH_PERIOD = 1000L
         private const val FOCUS_ACCESS_DATE = "focus_access_date"
         private const val FOCUS_EXP = "focus_exp"
 
@@ -174,6 +163,7 @@ class FocusModelImpl(private val applicationContext: Context) : FocusModel {
         fun getInstance(context: Context) : FocusModelImpl{
             return instance?:FocusModelImpl(context.applicationContext).apply {
                 updateExpPrefs()
+                onLevelValueChanged()
                 instance = this }
         }
 

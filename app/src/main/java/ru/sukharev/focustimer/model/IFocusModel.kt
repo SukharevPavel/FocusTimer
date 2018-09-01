@@ -3,7 +3,7 @@ package ru.sukharev.focustimer.model
 import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 
-interface FocusModel {
+interface IFocusModel {
 
     fun switchCounter()
 
@@ -15,13 +15,20 @@ interface FocusModel {
 
     fun getMaxValue() : Int
 
+    fun notifyFocusFinished(value : Int, interrupted: Boolean)
+
+    fun notifyValueChanged(value : Int)
+
+    fun setServiceListener(serviceListener : ITimerService)
+
+
     interface Listener {
 
         fun onNewValue(value : Int)
 
         fun onNewLevel(levelEntry: LevelEntry)
 
-        fun onFocusFinish()
+        fun onFocusFinish(successful: Boolean)
 
         fun onStateChanged(state: CounterState)
 

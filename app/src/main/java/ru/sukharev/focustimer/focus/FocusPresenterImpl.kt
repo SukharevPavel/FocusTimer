@@ -1,12 +1,12 @@
 package ru.sukharev.focustimer.focus
 
-import ru.sukharev.focustimer.model.FocusModel
+import ru.sukharev.focustimer.model.IFocusModel
 import ru.sukharev.focustimer.utils.CounterState
 import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.getReadableTime
 
-class FocusPresenterImpl(private val view :FocusContract.View, private val model: FocusModel): FocusContract.Presenter,
-    FocusModel.Listener{
+class FocusPresenterImpl(private val view :FocusContract.View, private val model: IFocusModel): FocusContract.Presenter,
+    IFocusModel.Listener{
 
     private var currentValue = 0
 
@@ -22,8 +22,11 @@ class FocusPresenterImpl(private val view :FocusContract.View, private val model
         view.setLevel(levelEntry)
     }
 
-    override fun onFocusFinish() {
-        view.notifyUserAboutFinish()
+    override fun onFocusFinish(successful: Boolean) {
+        if (successful) {
+            view.notifyUserAboutFinish()
+        }
+        onNewValue(0)
     }
 
     override fun stop() {

@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".settings.SettingsActivity"/>
+
+        <service android:name=".model.TimerServiceImpl" />
     </application>
 
 </manifest>
