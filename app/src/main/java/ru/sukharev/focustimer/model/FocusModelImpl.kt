@@ -72,6 +72,7 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         for (listener in listeners){
             listener.onFocusFinish(successful)
         }
+        serviceListener = null
     }
 
     override fun switchCounter(){
