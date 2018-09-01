@@ -20,8 +20,8 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
             initialized = true
             return
         }
-        val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp - currentLevelEntry.level.getMinPoints()
-        val baseExp = currentLevelEntry.exp
+        val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp
+        val baseExp = currentLevelEntry.exp + currentLevelEntry.level.getMinPoints()
         if (baseExp < totalExp) {
             val totalDiff = Math.abs(totalExp - baseExp)
             smoothSetLevel(levelEntry, totalDiff)
@@ -32,13 +32,13 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
     }
 
     private fun smoothSetLevel(levelEntry: LevelEntry, totalDiff: Int){
-        val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp - currentLevelEntry.level.getMinPoints()
-        val baseExp = currentLevelEntry.exp
-        val currentLevelMax = currentLevelEntry.level.maxPoints
+        val totalExp = levelEntry.level.getMinPoints() + levelEntry.exp
+        val baseExp = currentLevelEntry.exp + currentLevelEntry.level.getMinPoints()
+        val currentLevelMax = currentLevelEntry.level.maxPoints + currentLevelEntry.level.getMinPoints()
         val animation = ProgressAnimation(levelProgressBar,
-                baseExp,
-                Math.min(totalExp, currentLevelMax))
-        animation.duration = TOTAL_ANIMATION_DURATION * Math.min(totalExp, currentLevelMax) / totalDiff
+                baseExp - currentLevelEntry.level.getMinPoints(),
+                Math.min(totalExp, currentLevelMax) - currentLevelEntry.level.getMinPoints())
+        animation.duration = TOTAL_ANIMATION_DURATION * (Math.min(totalExp, currentLevelMax) - baseExp) / totalDiff
         animation.setAnimationListener(object: Animation.AnimationListener{
             override fun onAnimationRepeat(animation: Animation?) {
 
@@ -52,10 +52,10 @@ class LevelAnimator(val levelProgressBar: ProgressBar, val levelTextView: TextVi
                         instantSetLevel(LevelEntry(newLevel, 0))
                         smoothSetLevel(levelEntry, totalDiff)
                     } else {
-                        currentLevelEntry = levelEntry
+                        instantSetLevel(levelEntry)
                     }
                 } else {
-                    currentLevelEntry = levelEntry
+                    instantSetLevel(levelEntry)
                 }
             }
 

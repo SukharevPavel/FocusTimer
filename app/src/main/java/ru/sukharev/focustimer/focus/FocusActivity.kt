@@ -17,6 +17,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ProgressBar
 import android.widget.TextView
+import org.jetbrains.annotations.TestOnly
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
 import ru.sukharev.focustimer.settings.SettingsActivity
@@ -38,7 +39,6 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     private val levelProgressBar by bind<ProgressBar>(R.id.focus_level_progress_bar)
     private val levelText by bind<TextView>(R.id.focus_level_text)
     private lateinit var levelAnimator : LevelAnimator
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +76,16 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
 
     override fun setLevel(levelEntry: LevelEntry) {
         levelAnimator.setValues(levelEntry)
+    }
+
+    @TestOnly
+    fun getLevelProgress(): Int {
+        return levelProgressBar.progress
+    }
+
+    @TestOnly
+    fun getLevelMax(): Int {
+        return levelProgressBar.max
     }
 
     override fun getViewContext(): Context {
