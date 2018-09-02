@@ -11,6 +11,8 @@
     <string name="focus_ringtone">Выберите звук для окончания фокуса</string>
     <string name="focus_vibrate">Вибрация</string>
     <string name="silent">Нет звука</string>
+    <string name="stop">Остановить</string>
+    <string name="notification_focus_processing">Фокус в процессе</string>
     <string-array name="levels">
         <item>Новичок</item>
         <item>Начинающий</item>
