@@ -1,9 +1,13 @@
 package ru.sukharev.focustimer.model
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
@@ -16,6 +20,7 @@ import ru.sukharev.focustimer.focus.FocusActivity
 import ru.sukharev.focustimer.utils.NOTIFICATION_CHANNEL_STRING
 import ru.sukharev.focustimer.utils.NOTIFICATION_ID
 import ru.sukharev.focustimer.utils.createNotificationChannelIfNeed
+import ru.sukharev.focustimer.utils.getReadableTime
 
 class TimerServiceImpl : Service(), ITimerService {
 
@@ -26,6 +31,10 @@ class TimerServiceImpl : Service(), ITimerService {
         applicationContext.resources.getInteger(R.integer.focus_time_default_value)
     }
     private var durationValue : Int? = null
+        set(value) {
+            field = value
+            updateNotification()
+        }
     private var startId: Int? = null
     private var durationFunc = {
         durationValue?:defaultFunc()
@@ -43,6 +52,12 @@ class TimerServiceImpl : Service(), ITimerService {
             }
         }
     }
+    private val stopReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            finishFocus(true)
+        }
+    }
+    private lateinit var notificationBuilder: NotificationCompat.Builder
 
     private fun finishFocus(interrupted: Boolean) {
         mainHandler.post {
@@ -50,18 +65,25 @@ class TimerServiceImpl : Service(), ITimerService {
         }
         serviceHandler.removeCallbacks(counterChangeRunnable)
         stopForeground(true)
+        stopService()
+    }
+
+    private fun stopService() {
         val startIdVal = startId
         if (startIdVal != null) {
             stopSelf(startIdVal)
         } else {
             stopSelf()
         }
+        model.notifyServerStopped()
+        unregisterReceiver(stopReceiver)
     }
 
     private var startMillis : Long? = null
     private var counterValue = 0
         set(value) {
             field = value
+            updateNotification()
             mainHandler.post {
                 model.notifyValueChanged(counterValue)
             }
@@ -92,19 +114,19 @@ class TimerServiceImpl : Service(), ITimerService {
         this.startId = startId
         model = FocusModelImpl.getInstance(this)
         model.setServiceListener(this)
+        startForeground(NOTIFICATION_ID, createServiceNotification())
         durationValue = intent.getIntExtra(EXTRA_DURATION, defaultFunc())
         counterValue = 0
         startMillis = System.currentTimeMillis()
-        startForeground(100, createServiceNotification())
         model.notifyServerStarted()
         serviceHandler.post(counterChangeRunnable)
+        registerReceiver(stopReceiver, IntentFilter(intentStopTimer))
         return Service.START_NOT_STICKY
     }
 
 
     override fun onDestroy() {
         serviceLooper.quit()
-        model.notifyServerStopped()
     }
 
     @Nullable
@@ -117,13 +139,13 @@ class TimerServiceImpl : Service(), ITimerService {
         private const val REFRESH_PERIOD = 1000L
         private const val NAME = "TimerHandlerThread"
         const val EXTRA_DURATION = "extra_duration"
-        private const val broadcastStopTimer = BuildConfig.APPLICATION_ID + ".stopTimerBroadcast"
+        private const val intentStopTimer = BuildConfig.APPLICATION_ID + ".stopTimerBroadcast"
     }
 
     private fun createServiceNotification(): Notification {
         createNotificationChannelIfNeed(this)
         val stopIntent = Intent().apply {
-            action = broadcastStopTimer
+            action = intentStopTimer
         }
 
         val activityIntent = Intent(applicationContext, FocusActivity::class.java)
@@ -135,16 +157,23 @@ class TimerServiceImpl : Service(), ITimerService {
                 0,
                 stopIntent,
                 0)
-        val builder = NotificationCompat.Builder(applicationContext,
+        notificationBuilder = NotificationCompat.Builder(applicationContext,
                 NOTIFICATION_CHANNEL_STRING)
                 .addAction(R.drawable.focus_stop, getString(R.string.stop), stopPendingIntent)
                 .setSmallIcon(R.drawable.ic_app_icon)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_focus_finished))
+                .setContentText(getString(R.string.notification_focus_processing))
+                .setSubText(getReadableTime(counterValue, durationFunc()))
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
 
-        return builder.build()
+        return notificationBuilder.build()
+    }
+
+    private fun updateNotification() {
+        notificationBuilder.setSubText(getReadableTime(counterValue, durationFunc()))
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
 }

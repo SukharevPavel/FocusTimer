@@ -12,6 +12,7 @@
     <string name="focus_vibrate">Vibrate</string>
     <string name="silent">Silent</string>
     <string name="stop">Stop</string>
+    <string name="notification_focus_processing">Focus in the process</string>
     <string-array name="levels">
         <item>Novice</item>
         <item>Beginner</item>
