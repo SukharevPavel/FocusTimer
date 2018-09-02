@@ -93,12 +93,15 @@ class TimerServiceImpl : Service(), ITimerService {
         counterValue = 0
         startMillis = System.currentTimeMillis()
         startForeground(100, createServiceNotification())
+        model.notifyServerStarted()
         serviceHandler.post(counterChangeRunnable)
         return Service.START_NOT_STICKY
     }
 
+
     override fun onDestroy() {
         serviceLooper.quit()
+        model.notifyServerStopped()
     }
 
     @Nullable
@@ -124,7 +127,7 @@ class TimerServiceImpl : Service(), ITimerService {
         val pendingIntent = PendingIntent.getActivity(applicationContext,
                 NOTIFICATION_ID,
                 activityIntent,
-                PendingIntent.FLAG_ONE_SHOT)
+                0)
         val stopPendingIntent = PendingIntent.getBroadcast(applicationContext,
                 0,
                 stopIntent,

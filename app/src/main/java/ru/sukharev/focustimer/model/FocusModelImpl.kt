@@ -87,6 +87,14 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         return maxValue()
     }
 
+    override fun notifyServerStarted() {
+        state = CounterState.STARTED
+    }
+
+    override fun notifyServerStopped() {
+        state = CounterState.STOPPED
+    }
+
     @SuppressLint("ApplySharedPref")
     override fun addCurrentExp(value : Int){
         updateExpPrefs()
@@ -124,7 +132,6 @@ class FocusModelImpl private constructor(private val applicationContext: Context
             }
         }
         onFocusFinish(!interrupted)
-        state = CounterState.STOPPED
     }
 
     private fun dropCounter(){
@@ -135,7 +142,6 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         val intent = Intent(applicationContext, TimerServiceImpl::class.java)
         intent.putExtra(TimerServiceImpl.EXTRA_DURATION, maxValue())
         applicationContext.startService(intent)
-        state = CounterState.STARTED
     }
 
     override fun attachListener(listener: IFocusModel.Listener) {

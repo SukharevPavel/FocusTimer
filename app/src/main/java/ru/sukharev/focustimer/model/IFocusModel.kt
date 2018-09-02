@@ -19,6 +19,10 @@ interface IFocusModel {
 
     fun notifyValueChanged(value : Int)
 
+    fun notifyServerStarted()
+
+    fun notifyServerStopped()
+
     fun setServiceListener(serviceListener : ITimerService)
 
 
