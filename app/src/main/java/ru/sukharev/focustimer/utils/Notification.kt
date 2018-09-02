@@ -13,7 +13,7 @@ import ru.sukharev.focustimer.focus.FocusActivity
 const val NOTIFICATION_CHANNEL_STRING = "focus_notification_channel"
 const val NOTIFICATION_ID = 1
 
-private fun createNotificationChannelIfNeed(context : Context){
+fun createNotificationChannelIfNeed(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_STRING) == null) {
