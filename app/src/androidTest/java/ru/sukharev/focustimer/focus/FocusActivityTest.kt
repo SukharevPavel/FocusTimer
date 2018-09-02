@@ -44,5 +44,13 @@ class FocusActivityTest {
         onView(withId(R.id.focus_level_text)).check(matches(withText(activity.applicationContext.getString(R.string.level) +
                 SPACE + secondLevelUp.level.getName(activity.applicationContext))))
         assertEquals(toSeconds(20), activity?.getLevelProgress())
+
+        assertEquals(Level.THREE.maxPoints, activity?.getLevelMax())
+        val thirdLevelUp = LevelEntry(Level.FIVE, Level.FIVE.maxPoints)
+        activity?.runOnUiThread { activity.setLevel(thirdLevelUp) }
+        Thread.sleep(LevelAnimator.TOTAL_ANIMATION_DURATION)
+        onView(withId(R.id.focus_level_text)).check(matches(withText(activity.applicationContext.getString(R.string.level) +
+                SPACE + thirdLevelUp.level.getName(activity.applicationContext))))
+        assertEquals(Level.FIVE.maxPoints, activity?.getLevelProgress())
     }
 }
