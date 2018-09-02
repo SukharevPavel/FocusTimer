@@ -26,7 +26,7 @@ class FocusActivityTest {
     var activityTestRule: ActivityTestRule<FocusActivity> = ActivityTestRule(FocusActivity::class.java)
 
     @Test
-    fun setLevel() {
+    fun testSetLevelAnimation_setLevelSequenceConsistently() {
         val activity = activityTestRule.activity
         val initLevel = LevelEntry(Level.ZERO, 0)
         activity?.runOnUiThread { activity.setLevel(initLevel) }

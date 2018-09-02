@@ -24,7 +24,7 @@ enum class Level(val maxPoints: Int, val reductionModifier: Int) {
     }
 
     fun getName(context : Context) : String{
-        return context.resources.getStringArray(R.array.levels)[ordinal];
+        return context.resources.getStringArray(R.array.levels)[ordinal]
     }
 
     companion object {
@@ -56,6 +56,12 @@ enum class Level(val maxPoints: Int, val reductionModifier: Int) {
                 }
             }
             return LevelEntry(curLevel, curExp - curLevel.getMinPoints())
+        }
+
+        fun getValidExpValue(value: Int): Int {
+            val maxLevel = Level.values()[Level.values().size - 1]
+            return Math.max(Math.min(value,
+                    maxLevel.getMinPoints() + maxLevel.maxPoints), 0)
         }
     }
 }

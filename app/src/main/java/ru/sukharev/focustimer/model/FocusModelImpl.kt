@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.utils.*
+import ru.sukharev.focustimer.utils.Level.Companion.getValidExpValue
 import java.util.concurrent.TimeUnit
 
 class FocusModelImpl private constructor(private val applicationContext: Context) : IFocusModel {
@@ -96,11 +97,6 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         onLevelValueChanged()
     }
 
-    private fun getValidExpValue(value: Int) : Int{
-        val maxLevel = Level.values()[Level.values().size-1]
-        return Math.max(Math.min(value,
-                maxLevel.getMinPoints() + maxLevel.maxPoints),0)
-    }
 
     @SuppressLint("ApplySharedPref")
     private fun updateExpPrefs(){

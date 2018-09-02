@@ -6,7 +6,7 @@ import org.junit.Test
 class LevelTest {
 
     @Test
-    fun getTotalPoints() {
+    fun testMinPoints_getValidMinPoints() {
         assertEquals(0, Level.ZERO.getMinPoints())
 
         assertEquals(toSeconds(40), Level.ONE.getMinPoints())
@@ -21,7 +21,7 @@ class LevelTest {
     }
 
     @Test
-    fun calculateDecrease() {
+    fun testCalculateDecrease_calculateValueDecreaseWithTime() {
         assertEquals(0,
                 Level.calculateDecrease(toSeconds(1100), Int.MAX_VALUE))
         assertEquals(toSeconds(1095),
@@ -49,7 +49,7 @@ class LevelTest {
     }
 
     @Test
-    fun getLevelEntry(){
+    fun testGetLevelEntry_getAppropriateLevelEntry() {
         assertEquals(LevelEntry(Level.ZERO,0), Level.getLevelEntry(toSeconds(0)))
         assertEquals(LevelEntry(Level.ONE,0), Level.getLevelEntry(toSeconds(40)))
         assertEquals(LevelEntry(Level.TWO,0), Level.getLevelEntry(toSeconds(100)))
@@ -64,6 +64,20 @@ class LevelTest {
 
         assertEquals(LevelEntry(Level.TWO, toSeconds(20)), Level.getLevelEntry(toSeconds(120)))
 
+    }
 
+    @Test
+    fun testGetValidExpValue_checkBoundaries() {
+        assertEquals(0, Level.getValidExpValue(-1000))
+        assertEquals(Level.FIVE.maxPoints + Level.FIVE.getMinPoints(), Level.getValidExpValue(Integer.MAX_VALUE))
+        assertEquals(Level.FIVE.maxPoints + Level.FIVE.getMinPoints(), Level.getValidExpValue(toSeconds(1105)))
+    }
+
+    @Test
+    fun testGetValidExpValue_testEquality() {
+        assertEquals(0, Level.getValidExpValue(0))
+        assertEquals(toSeconds(100), Level.getValidExpValue(toSeconds(100)))
+        assertEquals(toSeconds(1095), Level.getValidExpValue(toSeconds(1095)))
+        assertEquals(toSeconds(1100), Level.getValidExpValue(toSeconds(1100)))
     }
 }
