@@ -5,4 +5,6 @@ interface ITimerService {
 
     fun durationChanged(duration: Int)
 
+    fun getValue(): Int
+
 }

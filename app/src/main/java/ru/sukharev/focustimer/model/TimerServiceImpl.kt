@@ -75,6 +75,9 @@ class TimerServiceImpl : Service(), ITimerService {
         finishFocus(true)
     }
 
+    override fun getValue(): Int {
+        return counterValue
+    }
 
     override fun onCreate() {
         super.onCreate()

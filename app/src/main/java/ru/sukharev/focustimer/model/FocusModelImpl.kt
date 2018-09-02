@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit
 
 class FocusModelImpl private constructor(private val applicationContext: Context) : IFocusModel {
 
-
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
     private val preferencesListener = SharedPreferences.OnSharedPreferenceChangeListener {
         _, key ->
@@ -148,6 +147,10 @@ class FocusModelImpl private constructor(private val applicationContext: Context
         listeners.add(listener)
         listener.onMaxValueChanged(maxValue())
         val exp = sharedPreferences.getInt(FOCUS_EXP,0)
+        if (state == CounterState.STARTED) {
+            val value = serviceListener?.getValue() ?: 0
+            listener.onNewValue(value)
+        }
         listener.onNewLevel(Level.getLevelEntry(exp))
         listener.onStateChanged(state)
     }
