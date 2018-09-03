@@ -17,8 +17,8 @@ import android.support.v4.app.NotificationCompat
 import ru.sukharev.focustimer.BuildConfig
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.focus.FocusActivity
+import ru.sukharev.focustimer.utils.FOCUS_PROCESS_NOTIFICATION_ID
 import ru.sukharev.focustimer.utils.NOTIFICATION_CHANNEL_STRING
-import ru.sukharev.focustimer.utils.NOTIFICATION_ID
 import ru.sukharev.focustimer.utils.createNotificationChannelIfNeed
 import ru.sukharev.focustimer.utils.getReadableTime
 
@@ -95,7 +95,7 @@ class TimerServiceImpl : Service(), ITimerService {
         this.durationValue = duration
     }
 
-    fun executeOnMainThread(function: () -> Unit) {
+    private fun executeOnMainThread(function: () -> Unit) {
         mainHandler.post {
             function()
         }
@@ -121,7 +121,7 @@ class TimerServiceImpl : Service(), ITimerService {
     override fun onStartCommand(@Nullable intent: Intent, flags: Int, startId: Int): Int {
         this.startId = startId
         model = FocusModelImpl.getInstance(this)
-        startForeground(NOTIFICATION_ID, createServiceNotification())
+        startForeground(FOCUS_PROCESS_NOTIFICATION_ID, createServiceNotification())
         durationValue = intent.getIntExtra(EXTRA_DURATION, defaultFunc())
         counterValue = 0
         startMillis = System.currentTimeMillis()
@@ -160,7 +160,7 @@ class TimerServiceImpl : Service(), ITimerService {
 
         val activityIntent = Intent(applicationContext, FocusActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(applicationContext,
-                NOTIFICATION_ID,
+                FOCUS_PROCESS_NOTIFICATION_ID,
                 activityIntent,
                 0)
         val stopPendingIntent = PendingIntent.getBroadcast(applicationContext,
@@ -183,7 +183,7 @@ class TimerServiceImpl : Service(), ITimerService {
     private fun updateNotification() {
         notificationBuilder.setSubText(getReadableTime(counterValue, durationFunc()))
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+        notificationManager.notify(FOCUS_PROCESS_NOTIFICATION_ID, notificationBuilder.build())
     }
 
 }

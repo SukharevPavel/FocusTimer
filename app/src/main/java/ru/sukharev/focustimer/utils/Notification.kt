@@ -11,7 +11,8 @@ import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.focus.FocusActivity
 
 const val NOTIFICATION_CHANNEL_STRING = "focus_notification_channel"
-const val NOTIFICATION_ID = 1
+const val FOCUS_FINISHED_NOTIFICATION_ID = 1
+const val FOCUS_PROCESS_NOTIFICATION_ID = 2
 
 fun createNotificationChannelIfNeed(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -31,7 +32,7 @@ fun sendFocusFinishedNotification(context: Context){
     val intent = Intent(context, FocusActivity::class.java)
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     val pendingIntent = PendingIntent.getActivity(context,
-            NOTIFICATION_ID,
+            FOCUS_FINISHED_NOTIFICATION_ID,
             intent,
             PendingIntent.FLAG_ONE_SHOT)
     val builder = NotificationCompat.Builder(context,
@@ -42,6 +43,6 @@ fun sendFocusFinishedNotification(context: Context){
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    notificationManager.notify(NOTIFICATION_ID,
+    notificationManager.notify(FOCUS_FINISHED_NOTIFICATION_ID,
             builder.build())
 }
