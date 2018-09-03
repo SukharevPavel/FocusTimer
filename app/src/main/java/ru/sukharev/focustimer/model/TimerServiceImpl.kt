@@ -75,7 +75,9 @@ class TimerServiceImpl : Service(), ITimerService {
         } else {
             stopSelf()
         }
-        model.notifyServerStopped()
+        mainHandler.post {
+            model.notifyServerStopped()
+        }
         unregisterReceiver(stopReceiver)
     }
 
