@@ -60,7 +60,7 @@ class TimerServiceImpl : Service(), ITimerService {
     private lateinit var notificationBuilder: NotificationCompat.Builder
 
     private fun finishFocus(interrupted: Boolean) {
-        mainHandler.post {
+        executeOnMainThread {
             model.notifyFocusFinished(counterValue, interrupted)
         }
         serviceHandler.removeCallbacks(counterChangeRunnable)
@@ -75,7 +75,7 @@ class TimerServiceImpl : Service(), ITimerService {
         } else {
             stopSelf()
         }
-        mainHandler.post {
+        executeOnMainThread {
             model.notifyServerStopped()
         }
         unregisterReceiver(stopReceiver)
@@ -86,13 +86,19 @@ class TimerServiceImpl : Service(), ITimerService {
         set(value) {
             field = value
             updateNotification()
-            mainHandler.post {
+            executeOnMainThread {
                 model.notifyValueChanged(counterValue)
             }
         }
 
     override fun durationChanged(duration: Int) {
         this.durationValue = duration
+    }
+
+    fun executeOnMainThread(function: () -> Unit) {
+        mainHandler.post {
+            function()
+        }
     }
 
     override fun dropCounter() {
@@ -115,12 +121,14 @@ class TimerServiceImpl : Service(), ITimerService {
     override fun onStartCommand(@Nullable intent: Intent, flags: Int, startId: Int): Int {
         this.startId = startId
         model = FocusModelImpl.getInstance(this)
-        model.setServiceListener(this)
         startForeground(NOTIFICATION_ID, createServiceNotification())
         durationValue = intent.getIntExtra(EXTRA_DURATION, defaultFunc())
         counterValue = 0
         startMillis = System.currentTimeMillis()
-        model.notifyServerStarted()
+        executeOnMainThread {
+            model.setServiceListener(this)
+            model.notifyServerStarted()
+        }
         serviceHandler.post(counterChangeRunnable)
         registerReceiver(stopReceiver, IntentFilter(intentStopTimer))
         return Service.START_NOT_STICKY
