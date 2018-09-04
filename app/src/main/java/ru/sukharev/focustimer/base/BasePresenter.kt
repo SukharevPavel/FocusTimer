@@ -1,6 +1,8 @@
 package ru.sukharev.focustimer.base
 
-interface BasePresenter {
+interface BasePresenter<T> {
+
+    fun setView(view : T)
 
     fun start()
 

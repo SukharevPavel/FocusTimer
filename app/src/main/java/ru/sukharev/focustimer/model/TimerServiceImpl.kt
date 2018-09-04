@@ -14,6 +14,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.support.annotation.Nullable
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.ServiceCompat.stopForeground
+import dagger.android.AndroidInjection
 import ru.sukharev.focustimer.BuildConfig
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.focus.FocusActivity
@@ -21,12 +23,14 @@ import ru.sukharev.focustimer.utils.FOCUS_PROCESS_NOTIFICATION_ID
 import ru.sukharev.focustimer.utils.NOTIFICATION_CHANNEL_STRING
 import ru.sukharev.focustimer.utils.createNotificationChannelIfNeed
 import ru.sukharev.focustimer.utils.getReadableTime
+import javax.inject.Inject
 
-class TimerServiceImpl : Service(), ITimerService {
+class TimerServiceImpl @Inject constructor (): Service(), ITimerService {
 
     private lateinit var serviceLooper: Looper
     private lateinit var serviceHandler: Handler
-    private lateinit var model : IFocusModel
+    @Inject
+    lateinit var model : IFocusModel
     private var defaultFunc  = {
         applicationContext.resources.getInteger(R.integer.focus_time_default_value)
     }
@@ -110,6 +114,7 @@ class TimerServiceImpl : Service(), ITimerService {
     }
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
         super.onCreate()
         val thread = HandlerThread(NAME)
         thread.start()
@@ -120,7 +125,6 @@ class TimerServiceImpl : Service(), ITimerService {
 
     override fun onStartCommand(@Nullable intent: Intent, flags: Int, startId: Int): Int {
         this.startId = startId
-        model = FocusModelImpl.getInstance(this)
         startForeground(FOCUS_PROCESS_NOTIFICATION_ID, createServiceNotification())
         durationValue = intent.getIntExtra(EXTRA_DURATION, defaultFunc())
         counterValue = 0

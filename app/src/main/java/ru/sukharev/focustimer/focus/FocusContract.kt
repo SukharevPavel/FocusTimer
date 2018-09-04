@@ -23,7 +23,8 @@ interface FocusContract {
         fun changeFocusButtonState(state: CounterState)
     }
 
-    interface Presenter : BasePresenter{
+    interface Presenter : BasePresenter<View>{
         fun focusButtonPressed()
+
     }
 }

@@ -9,7 +9,10 @@ import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.utils.*
 import ru.sukharev.focustimer.utils.Level.Companion.getValidExpValue
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FocusModelImpl private constructor(private val applicationContext: Context) : IFocusModel {
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)

@@ -17,6 +17,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ProgressBar
 import android.widget.TextView
+import dagger.android.AndroidInjection
 import org.jetbrains.annotations.TestOnly
 import ru.sukharev.focustimer.R
 import ru.sukharev.focustimer.model.FocusModelImpl
@@ -26,11 +27,12 @@ import ru.sukharev.focustimer.utils.LevelEntry
 import ru.sukharev.focustimer.utils.bind
 import ru.sukharev.focustimer.utils.playSound
 import ru.sukharev.focustimer.utils.views.LevelAnimator
+import javax.inject.Inject
 
 
 class FocusActivity : AppCompatActivity(), FocusContract.View {
 
-
+    @Inject
     override lateinit var presenter: FocusContract.Presenter
 
     private val focusTextView by bind<TextView>(R.id.focus_text)
@@ -41,10 +43,11 @@ class FocusActivity : AppCompatActivity(), FocusContract.View {
     private lateinit var levelAnimator : LevelAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_focus)
         levelAnimator = LevelAnimator(levelProgressBar, levelText)
-        presenter = FocusPresenterImpl(this, FocusModelImpl.getInstance(this))
+        presenter.setView(this)
         focusButton.setOnClickListener{presenter.focusButtonPressed()}
         presenter.start()
     }
